@@ -85,7 +85,7 @@
   /* Navigation */
   nav {
     background-color: #333;
-    padding: 10px;
+    padding: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -164,15 +164,15 @@
     padding: 10px;
   }
   
-  /* Tables */
+  /* Tables
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 25px 0;
     font-size: 0.9em;
     font-family: sans-serif;
     min-width: 400px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    overflow-x: auto;
   }
   
   thead tr {
@@ -185,6 +185,7 @@
   td {
     padding: 12px 15px;
     border-bottom: 1px solid #dddddd;
+    word-break: break-word;
   }
   
   tbody tr:nth-child(even) {
@@ -193,5 +194,77 @@
   
   tbody tr:hover {
     background-color: #ddd;
+  } */
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    overflow-x: auto;
+  }
+  
+  thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+  }
+  
+  th,
+  td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #dddddd;
+    word-break: break-word;
+  }
+  
+  tbody tr:nth-child(even) {
+    background-color: #f3f3f3;
+  }
+  
+  tbody tr:hover {
+    background-color: #ddd;
+  }
+  
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+
+    thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+    
+    tr {
+      border-bottom: 3px solid #ddd;
+      display: block;
+      margin-bottom: .625em;
+    }
+    
+    td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .8em;
+      text-align: right;
+    }
+    
+    td::before {
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    td:last-child {
+      border-bottom: 0;
+    }
   }
   

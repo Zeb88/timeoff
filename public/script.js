@@ -15,7 +15,8 @@ document.getElementById('leaveForm').addEventListener('submit', async (e) => {
 
     marked.setOptions({
         gfm: true,
-        tables: true
+        tables: true,
+        linkify: true
     });
 
     resultDiv.innerHTML = 'Loading...';

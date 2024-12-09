@@ -14,7 +14,7 @@ const cache = new NodeCache({ stdTTL: 3600 });
 
 // Create a rate limiter with a 15-minute window and a maximum of 10 requests per window
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes in milliseconds
+  windowMs: 60 * 60 * 1000, // 1 hour in milliseconds
   max: 10, // Limit each IP to 10 requests per window
   standardHeaders: true, // Include rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
@@ -59,30 +59,25 @@ const promptTemplate = (country, state, year) =>
     4. **Holiday Ideas**:
        - Suggest possible activities, destinations, or experiences within ${state} for the planned holiday periods.
     
-    Format the response using proper markdown for clarity and readability. Ensure appropriate spacing and structure, focusing on accuracy and an engaging presentation.
+    Format the response using proper markdown for clarity and readability. Ensure appropriate spacing and structure, focusing on accuracy and an engaging presentation. Beware of legal annual leave days available in ${state} and ${country}.
     
     Example output structure:
     
     ## Annual Leave Optimization for ${state}, ${country} in ${year}
 
-    <br>
+    **Legal Considerations**
+    [Highlight any legal considerations, such as annual leave days available in ${state} and ${country}.]
     
     **Summary**  
     [Provide a brief summary highlighting the total days off and annual leave days used.]
-
-    <br>
     
     | Holiday Period | Public Holidays | Leave Dates       | Total Days Off | Description                    |
     |----------------|-----------------|-------------------|----------------|--------------------------------|
     | [Period Name]  | [Dates]         | [Leave Dates]     | [Number]       | [Brief description of period] |
     | [Period Name]  | [Dates]         | [Leave Dates]     | [Number]       | [Brief description of period] |
-
-    <br>
     
     **State-Specific Considerations**  
     [Describe any additional regional factors or opportunities.]
-
-    <br>
     
     **Holiday Ideas**  
     [Include suggestions for activities or destinations within ${state} during the planned periods.]
@@ -116,7 +111,7 @@ app.post("/optimize-leave", async (req, res) => {
         "Content-Type": "application/json", // Set content type to JSON
       },
       data: {
-        model: "llama-3.1-sonar-small-128k-online", // Specify the model to use
+        model: "llama-3.1-sonar-large-128k-online", // Specify the model to use
         messages: [
           {
             role: "system", // System role for the initial message
@@ -127,7 +122,7 @@ app.post("/optimize-leave", async (req, res) => {
             content: `What's the most efficient way to take annual leave in ${state}, ${country} for the year ${year}?`, // User's question
           },
         ],
-        max_tokens: 800, // Limit the response to 500 tokens
+        max_tokens: 1000, // Limit the response to 500 tokens
         temperature: 0.2, // Set the randomness of the response
         top_p: 0.9, // Set the probability threshold for sampling
         search_domain_filter: ["perplexity.ai"], // Filter for search domain
