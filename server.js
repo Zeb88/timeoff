@@ -15,7 +15,7 @@ const cache = new NodeCache({ stdTTL: 3600 });
 // Create a rate limiter with a 15-minute window and a maximum of 10 requests per window
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour in milliseconds
-  max: 10, // Limit each IP to 10 requests per window
+  max: 1000, // Limit each IP to 1000 requests per window
   standardHeaders: true, // Include rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
