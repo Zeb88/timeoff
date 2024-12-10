@@ -10,9 +10,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9687863924125763"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+     crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -20,57 +18,43 @@
         <a href="/"><img src="/logo.png" alt="✨ TimeOff AI" width="200" height="30"></a>
         <a id="donate" href="https://buymeacoffee.com/fodderinc">FodderInc</a>
     </nav>
-
+    
     <!-- AdSense Slot 1 -->
     <div class="adsense-slot">
         <!-- AdSense code goes here -->
     </div>
 
-    <div class="container" x-data="leaveFormHandler">
+    <div class="container">
         <h1 id="title">Annual Leave Optimizer</h1>
         <h3 id="subtitle">Maximize Your Holidays with AI</h3>
-        <br />
-
-        <form @submit.prevent="submitForm">
-            <h6 id="label">Enter your country, state and year to get the most efficient strategy to take annual leave
-            </h6>
-            <select id="country" x-model="selectedCountry" @change="updateStates" required>
+        <br/>
+        
+        <form id="leaveForm">
+            <h6 id="label">Enter your country, state and year to get the most efficient strategy to take annual leave</h6>
+            <select id="country" required>
                 <option value="" disabled selected>Select Country</option>
-                <template x-for="(states, country) in countryStates" :key="country">
-                    <option :value="country" x-text="country"></option>
-                </template>
             </select>
-            <select id="state" x-model="selectedState" required>
+            <select id="state" required>
                 <option value="" disabled selected>Select State</option>
-                <template x-for="state in states" :key="state">
-                    <option :value="state" x-text="state"></option>
-                </template>
             </select>
-            <select id="year" x-model="selectedYear" required>
+            <select id="year" required>
                 <option value="" disabled selected>Select Year</option>
-                <template x-for="year in years" :key="year">
-                    <option :value="year" x-text="year"></option>
-                </template>
             </select>
             <button type="submit">✨ Suggest Annual Leave Strategy </button>
         </form>
-
+        
         <!-- AdSense Slot 2 -->
         <div class="adsense-slot">
             <!-- AdSense code goes here -->
         </div>
 
-        <div id="result" x-html="result"></div>
-        <p id="cause"><a href="https://uniglobalunion.org/" target="_blank">We support workers' rights everywhere</a>
-        </p>
+        <div id="result"></div>
+        <p id="cause"><a href="https://uniglobalunion.org/" target="_blank">We support workers' rights everywhere</a></p>
 
         Made in Australia 🇦🇺 by <a href="https://fodderinc.com/" target="_blank">Fodder Inc</a>
-        <br />
+        <br/>
         <div id="donate-button">
-            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
-                data-name="bmc-button" data-slug="fodderinc" data-color="#FFDD00" data-emoji="" data-font="Cookie"
-                data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000"
-                data-coffee-color="#ffffff"></script>
+            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="fodderinc" data-color="#FFDD00" data-emoji=""  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>
         </div>
     </div>
 
@@ -78,7 +62,12 @@
     <div class="adsense-slot">
         <!-- AdSense code goes here -->
     </div>
+  
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="script.js"></script>
 </body>
 
 </html>
+
+
+
