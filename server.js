@@ -9,8 +9,8 @@ require('dotenv').config(); // dotenv for loading environment variables
 const app = express();
 const port = 3000; // Define the port the server will listen on
 
-// Create a cache with a 1 hour time to live (TTL)
-const cache = new NodeCache({ stdTTL: 3600 });
+// Create a cache with a 1 month time to live (TTL)
+const cache = new NodeCache({ stdTTL: 2629800 });
 
 // Create a rate limiter with a 15-minute window and a maximum of 10 requests per window
 const limiter = rateLimit({

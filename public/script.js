@@ -80,11 +80,17 @@ document.getElementById("country").addEventListener("change", function () {
 });
 
 // Set the year selector dynamically
-const yearInput = document.getElementById("year");
+const yearSelect = document.getElementById("year");
 const currentYear = new Date().getFullYear();
 const nextYear = currentYear + 1;
 
-yearInput.min = currentYear;
-yearInput.max = nextYear;
-yearInput.value = currentYear; // Default to the current year
+const option1 = document.createElement("option");
+option1.value = currentYear;
+option1.textContent = currentYear;
+yearSelect.appendChild(option1);
+
+const option2 = document.createElement("option");
+option2.value = nextYear;
+option2.textContent = nextYear;
+yearSelect.appendChild(option2);
 
