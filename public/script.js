@@ -25,19 +25,43 @@ document.addEventListener('alpine:init', () => {
         years: [],
         result: "",
 
+
+        /**
+         * Initializes the form by populating the year dropdown.
+         * @this {leaveFormHandler}
+         */
         init() {
             this.populateYearDropdown();
         },
 
+
+        /**
+         * Populates the year dropdown with the current year and the next year.
+         * @this {leaveFormHandler}
+         */
         populateYearDropdown() {
             const currentYear = new Date().getFullYear();
             this.years = [currentYear, currentYear + 1];
         },
 
+        
+        /**
+         * Updates the list of states based on the selected country.
+         * If the selected country does not exist in the countryStates object,
+         * sets the states to an empty array.
+         * @this {leaveFormHandler}
+         */
         updateStates() {
             this.states = this.countryStates[this.selectedCountry] || [];
         },
 
+
+        /**
+         * Handles the form submission.
+         * @async
+         * @throws {Error} If the response is not ok or if there is a network error.
+         * @this {leaveFormHandler}
+         */
         async submitForm() {
             // Set Markdown options
             marked.setOptions({
@@ -51,7 +75,7 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
 
-            this.result = "Doing the AI stuff...";
+            this.result = "Please wait! Doing the AI stuff...";
 
             try {
                 const response = await fetch('/optimize-leave', {
@@ -67,11 +91,7 @@ document.addEventListener('alpine:init', () => {
                 if (!response.ok) throw new Error('Network response was not ok');
             
                 const data = await response.json();
-                console.log('Response data:', data);
-                console.log('typeof data:', typeof data);
-            
                 const parsedData = marked.parse(data);
-                console.log('Parsed data:', parsedData);
             
                 this.result = parsedData;
               } catch (error) {

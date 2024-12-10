@@ -1,18 +1,23 @@
 // Import required modules
 const express = require("express"); // Express framework for building web applications
 const axios = require("axios"); // Axios for making HTTP requests
-const NodeCache = require("node-cache"); // NodeCache for caching data in memory
 const rateLimit = require("express-rate-limit"); // Express-rate-limit for rate limiting requests
-require('dotenv').config(); // dotenv for loading environment variables
+const storage = require("node-persist"); // Node-persist for persistent storage
+require("dotenv").config(); // dotenv for loading environment variables
 
 // Create an Express application
 const app = express();
 const port = 3000; // Define the port the server will listen on
 
-// Create a cache with a 1 month time to live (TTL)
-const cache = new NodeCache({ stdTTL: 2629800 });
+// Initialize node-persist with a specific directory for storage
+(async () => {
+  await storage.init({
+    dir: "cache", // Directory where data will be stored
+    ttl: 2629800 * 1000, // 1 month time to live in milliseconds
+  });
+})();
 
-// Create a rate limiter with a 15-minute window and a maximum of 10 requests per window
+// Create a rate limiter with a 1-hour window and a maximum of 1000 requests per window
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour in milliseconds
   max: 1000, // Limit each IP to 1000 requests per window
@@ -37,8 +42,8 @@ if (!PERPLEXITY_API_KEY) {
 }
 
 // Function to generate the prompt template with placeholders
-const promptTemplate = (country, state, year) => 
-    `
+const promptTemplate = (country, state, year) =>
+  `
     Create an optimized annual leave plan for workers in ${state}, ${country} for the year ${year}. The plan should maximize total days off by strategically combining public holidays with annual leave days. Include the following details:
     
     1. **Summary**: 
@@ -82,76 +87,76 @@ const promptTemplate = (country, state, year) =>
     **Holiday Ideas**  
     [Include suggestions for activities or destinations within ${state} during the planned periods.]
     `;
-    
 
 // Handle POST requests to the /optimize-leave endpoint
 app.post("/optimize-leave", async (req, res) => {
-  // Extract country, state, and year from the request body
+  // Destructure the country, state, and year from the request body
   const { country, state, year } = req.body;
 
-  // Create a unique cache key based on country, state, and year
+  // Construct a unique cache key using country, state, and year
   const cacheKey = `${country}-${state}-${year}`;
 
-  // Check if the cache contains a result for the cache key
-  if (cache.has(cacheKey)) {
-    // If it does, return the cached result
-    return res.json(cache.get(cacheKey));
-  }
-
   try {
-    // Define the API endpoint URL
+    // Attempt to retrieve a cached result using the cache key
+    const cachedResult = await storage.getItem(cacheKey);
+    
+    // If a cached result exists, send it back to the client
+    if (cachedResult) {
+      return res.json(cachedResult);
+    }
+
+    // Define the API endpoint URL for the Perplexity AI service
     const url = "https://api.perplexity.ai/chat/completions";
 
-    // Set up the API request options
+    // Set up the options for the API request
     const options = {
       method: "POST", // HTTP method
-      url: url, // API endpoint URL
+      url, // API endpoint
       headers: {
-        Authorization: `Bearer ${PERPLEXITY_API_KEY}`, // Set the API key in the Authorization header
-        "Content-Type": "application/json", // Set content type to JSON
+        Authorization: `Bearer ${PERPLEXITY_API_KEY}`, // Authorization header with API key
+        "Content-Type": "application/json", // Content type of the request
       },
+      // Data payload for the API request
       data: {
-        model: "llama-3.1-sonar-large-128k-online", // Specify the model to use
+        model: "llama-3.1-sonar-large-128k-online", // Model to be used
         messages: [
           {
-            role: "system", // System role for the initial message
-            content: promptTemplate(country, state, year), // Use the prompt template
+            role: "system", // System message providing context
+            content: promptTemplate(country, state, year), // Prompt generated for the model
           },
           {
-            role: "user", // User role for the follow-up message
-            content: `What's the most efficient way to take annual leave in ${state}, ${country} for the year ${year}?`, // User's question
+            role: "user", // User message asking a question
+            content: `What's the most efficient way to take annual leave in ${state}, ${country} for the year ${year}?`,
           },
         ],
-        max_tokens: 1000, // Limit the response to 500 tokens
-        temperature: 0.2, // Set the randomness of the response
-        top_p: 0.9, // Set the probability threshold for sampling
-        search_domain_filter: ["perplexity.ai"], // Filter for search domain
-        return_images: false, // Do not return images
-        return_related_questions: false, // Do not return related questions
-        search_recency_filter: "month", // Filter for search recency
-        top_k: 0, // Set top-k sampling value
-        stream: false, // Disable streaming
-        presence_penalty: 0, // Set presence penalty
-        frequency_penalty: 1, // Set frequency penalty
+        max_tokens: 1000, // Maximum number of tokens in the response
+        temperature: 0.2, // Sampling temperature for randomness
+        top_p: 0.9, // Nucleus sampling parameter
+        search_domain_filter: ["perplexity.ai"], // Domain filter for searches
+        return_images: false, // Whether to return images in the response
+        return_related_questions: false, // Whether to return related questions
+        search_recency_filter: "month", // Recency filter for search results
+        top_k: 0, // Top-K sampling parameter
+        stream: false, // Whether to stream the response
+        presence_penalty: 0, // Penalty for token presence in the response
+        frequency_penalty: 1, // Penalty for token frequency in the response
       },
     };
 
-    // Make the API request
+    // Make the POST request to the API using axios
     const response = await axios(options);
-    
     // Extract the result from the API response
     const result = response.data.choices[0].message.content;
 
-    // Cache the result using the cache key
-    cache.set(cacheKey, result);
-    
-    // Send the result back to the client in JSON format
+    // Cache the result with the cache key for future use
+    await storage.setItem(cacheKey, result);
+
+    // Send the result back to the client as a JSON response
     res.json(result);
   } catch (error) {
-    // Log the error to the console
+    // Log any errors that occur during the process
     console.error("Error:", error);
-    
-    // Send a 500 error response to the client
+    // Send a 500 Internal Server Error response with an error message
     res.status(500).json({ error: "An error occurred while fetching data" });
   }
 });
