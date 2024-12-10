@@ -36,3 +36,7 @@ nav a.login:hover {
 nav img {
   height: 40px;
 }
+
+#donate-button {
+  margin-top: 10px;
+}
