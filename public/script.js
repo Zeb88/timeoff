@@ -55,12 +55,12 @@ document.getElementById('leaveForm').addEventListener('submit', async (e) => {
 
 // Add country values to the country select
 const countrySelect = document.getElementById("country");
-for (const country in countryStates) {
-    const option = document.createElement("option");
-    option.value = country;
-    option.textContent = country;
-    countrySelect.appendChild(option);
-}
+Object.keys(countryStates).forEach(country => {
+  const option = document.createElement("option");
+  option.value = country;
+  option.textContent = country;
+  countrySelect.appendChild(option);
+});
 
 document.getElementById("country").addEventListener("change", function () {
     const country = this.value;
