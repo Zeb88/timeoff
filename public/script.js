@@ -17,61 +17,70 @@ const countryStates = {
     "Indonesia": ["Aceh", "Bali", "Banten", "Bengkulu", "Central Java", "Central Kalimantan", "Central Sulawesi", "East Java", "East Kalimantan", "East Nusa Tenggara", "Gorontalo", "Jakarta", "Jambi", "Lampung", "Maluku", "North Kalimantan", "North Maluku", "North Sulawesi", "North Sumatra", "Papua", "Riau", "Riau Islands", "South Kalimantan", "South Sulawesi", "South Sumatra", "Southeast Sulawesi", "West Java", "West Kalimantan", "West Nusa Tenggara", "West Papua", "West Sulawesi", "West Sumatra", "Yogyakarta"]
 };
 
-document.getElementById('leaveForm').addEventListener('submit', async (e) => {
+
+// Add event listener to the form
+document.getElementById('leaveForm').addEventListener('submit', function (e) {
     e.preventDefault();
+
     const country = document.getElementById('country').value;
     const state = document.getElementById('state').value;
     const year = document.getElementById('year').value;
     const resultDiv = document.getElementById('result');
 
+    // Set Markdown options
     marked.setOptions({
         gfm: true,
         tables: true,
         linkify: true
     });
 
-    resultDiv.innerHTML = 'Doing the AI stuff...';
+    // Reset the result div
+    resultDiv.textContent = 'Doing the AI stuff...';
 
-    try {
-        const response = await fetch('/optimize-leave', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ country, state, year }),
-        });
-
+    fetch('/optimize-leave', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ country, state, year }),
+    })
+    .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-
-        const data = await response.json();
-        resultDiv.innerHTML = marked.parse(data); // Use marked to parse data;
-    } catch (error) {
+        return response.json();
+    })
+    .then(data => {
+        resultDiv.innerHTML = marked.parse(data); // Assuming the server response is HTML
+    })
+    .catch(error => {
         console.error('Error:', error);
-        resultDiv.innerHTML = 'An error occurred while fetching data';
-    }
+        resultDiv.textContent = 'An error occurred while fetching data';
+    });
 });
 
-// Add country values to the country select
-const countrySelect = document.getElementById("country");
-Object.keys(countryStates).forEach(country => {
-  const option = document.createElement("option");
-  option.value = country;
-  option.textContent = country;
-  countrySelect.appendChild(option);
-});
+// Populate country dropdown
+(function populateCountryDropdown() {
+    const countrySelect = document.getElementById('country');
+    Object.keys(countryStates).forEach(country => {
+        const option = document.createElement('option');
+        option.value = country;
+        option.textContent = country;
+        countrySelect.appendChild(option);
+    });
+})();
 
-document.getElementById("country").addEventListener("change", function () {
+// Update state dropdown on country change
+document.getElementById('country').addEventListener('change', function () {
     const country = this.value;
-    const stateSelect = document.getElementById("state");
-    
+    const stateSelect = document.getElementById('state');
+
     // Clear existing options
     stateSelect.innerHTML = '<option value="" disabled selected>Select State</option>';
 
-    if (country && countryStates[country]) {
+    if (countryStates[country]) {
         countryStates[country].forEach(state => {
-            const option = document.createElement("option");
+            const option = document.createElement('option');
             option.value = state;
             option.textContent = state;
             stateSelect.appendChild(option);
@@ -80,17 +89,14 @@ document.getElementById("country").addEventListener("change", function () {
 });
 
 // Set the year selector dynamically
-const yearSelect = document.getElementById("year");
-const currentYear = new Date().getFullYear();
-const nextYear = currentYear + 1;
+(function populateYearDropdown() {
+    const yearSelect = document.getElementById('year');
+    const currentYear = new Date().getFullYear();
 
-const option1 = document.createElement("option");
-option1.value = currentYear.toString();
-option1.textContent = currentYear.toString();
-yearSelect.appendChild(option1);
-
-const option2 = document.createElement("option");
-option2.value = nextYear.toString();
-option2.textContent = nextYear.toString();
-yearSelect.appendChild(option2);
-
+    for (let year = currentYear; year <= currentYear + 1; year++) {
+        const option = document.createElement('option');
+        option.value = year.toString();
+        option.textContent = year.toString();
+        yearSelect.appendChild(option);
+    }
+})();
