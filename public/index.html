@@ -4,21 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Annual Leave Optimizer - Plan Your Holidays Smartly</title>
-    <meta name="description"
-        content="Annual Leave Optimizer helps you plan your holidays smartly. It provides you with the most efficient way to take annual leave.">
+    <title>Annual Leave Optimizer - Maximize Your Holiday Time with AI</title>
+    <meta name="description" content="Use our Annual Leave Optimizer to strategically plan your holidays. Discover the best way to combine public holidays and annual leave for maximum time off.">
+    <meta name="keywords" content="annual leave, holiday planner, public holidays, time off, vacation planning, AI">
+    <link rel="canonical" href="https://fodderinc.com/">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9687863924125763"
-        crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9687863924125763" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
     <nav>
-        <a href="/"><img src="/logo.png" alt="✨ TimeOff AI" width="200" height="30"></a>
-        <a id="donate" href="https://buymeacoffee.com/fodderinc">FodderInc</a>
+        <a href="/"><img src="/logo.png" alt="TimeOff AI Logo" width="200" height="30"></a>
+        <a id="donate" href="https://fodderinc.com/" target="_blank" rel="noopener noreferrer">Fodder Inc</a>
     </nav>
 
     <!-- AdSense Slot 1 -->
@@ -32,8 +32,7 @@
         <br />
 
         <form @submit.prevent="submitForm">
-            <h6 id="label">Enter your country, state and year to get the most efficient strategy to take annual leave
-            </h6>
+            <h6 id="label">Enter your country, state, and year to discover the most efficient annual leave strategy</h6>
             <select id="country" x-model="selectedCountry" @change="updateStates" required>
                 <option value="" disabled selected>Select Country</option>
                 <template x-for="(states, country) in countryStates" :key="country">
@@ -61,16 +60,12 @@
         </div>
 
         <div id="result" x-html="result"></div>
-        <p id="cause"><a href="https://uniglobalunion.org/" target="_blank">We support workers' rights everywhere</a>
-        </p>
+        <p id="cause"><a href="https://uniglobalunion.org/" target="_blank" rel="noopener noreferrer">We support workers' rights everywhere</a></p>
 
-        Made in Australia 🇦🇺 by <a href="https://fodderinc.com/" target="_blank">Fodder Inc</a>
+        <div>Made in Australia 🇦🇺 by <a href="https://fodderinc.com/" target="_blank" rel="noopener noreferrer">Fodder Inc</a></div>
         <br />
         <div id="donate-button">
-            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
-                data-name="bmc-button" data-slug="fodderinc" data-color="#FFDD00" data-emoji="" data-font="Cookie"
-                data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000"
-                data-coffee-color="#ffffff"></script>
+            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="fodderinc" data-color="#FFDD00" data-emoji="" data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff"></script>
         </div>
     </div>
 
