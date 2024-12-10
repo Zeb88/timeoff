@@ -9,6 +9,9 @@ require("dotenv").config(); // dotenv for loading environment variables
 const app = express();
 const port = 3000; // Define the port the server will listen on
 
+// Set 'trust proxy' to true to allow express-rate-limit to accurately identify users
+app.set('trust proxy', true);
+
 // Initialize node-persist with a specific directory for storage
 (async () => {
   await storage.init({
@@ -165,4 +168,5 @@ app.post("/optimize-leave", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+
 
