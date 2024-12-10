@@ -85,12 +85,12 @@ const currentYear = new Date().getFullYear();
 const nextYear = currentYear + 1;
 
 const option1 = document.createElement("option");
-option1.value = currentYear;
-option1.textContent = currentYear;
+option1.value = currentYear.toString();
+option1.textContent = currentYear.toString();
 yearSelect.appendChild(option1);
 
 const option2 = document.createElement("option");
-option2.value = nextYear;
-option2.textContent = nextYear;
+option2.value = nextYear.toString();
+option2.textContent = nextYear.toString();
 yearSelect.appendChild(option2);
 
